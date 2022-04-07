@@ -14,7 +14,6 @@
     MISO   ->   D12
 
 This code should print the received values to the serial monitor
-Please, like share and subscribe : https://www.youtube.com/c/ELECTRONOOBS
 */
 
 #include <SPI.h>

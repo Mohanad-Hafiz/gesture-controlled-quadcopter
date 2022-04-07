@@ -1,13 +1,3 @@
-/*  
- * Check:  http://www.electronoobs.com/eng_robotica_tut5_2_1.php
- * 
- * 
-A basic receiver test for the nRF24L01 module to receive 6 channels send a ppm sum
-with all of them on digital pin D2.
-Install NRF24 library before you compile
-Please, like, share and subscribe on my https://www.youtube.com/c/ELECTRONOOBS
- */
-
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
