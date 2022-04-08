@@ -7,13 +7,14 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 #include <Wire.h>
+#include <stdint.h>
 
 /*Create a unique pipe out. The receiver has to 
   wear the same unique code*/
   
 const uint64_t pipeOut = 0xE8E8F0F0E1LL; //IMPORTANT: The same as in the receiver
 
-RF24 radio(9, 10); // select  CSN  pin
+RF24 radio(9, 10); // nRF24l01 (CE, CSN)
 
 // MPU Variables
 const int MPU = 0x68; // MPU6050 I2C address
@@ -184,6 +185,7 @@ void read_IMU() {
   Wire.endTransmission(false);
   Wire.requestFrom(MPU, 6, true); // Read 6 registers total, each axis value is stored in 2 registers
   //For a range of +-8g, we need to divide the raw values by 4096, according to the datasheet
+  // Shift by 8 bits then use the or operator to combine bytes
   AccX = (Wire.read() << 8 | Wire.read()) / 4096.0; // X-axis value
   AccY = (Wire.read() << 8 | Wire.read()) / 4096.0; // Y-axis value
   AccZ = (Wire.read() << 8 | Wire.read()) / 4096.0; // Z-axis value
