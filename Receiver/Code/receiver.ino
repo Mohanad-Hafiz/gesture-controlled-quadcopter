@@ -1,6 +1,7 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
+#include <stdint.h>
 
 ////////////////////// PPM CONFIGURATION//////////////////////////
 #define channel_number 6  //set the number of channels
