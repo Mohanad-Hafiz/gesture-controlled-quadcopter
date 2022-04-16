@@ -29,8 +29,11 @@ int yg = 1; // Yaw gain
 // Set threshold values
 int throttle_up_threshold = 800;
 int throttle_down_threshold = 200;
-int yaw_up_threshold = 200;
-int yaw_down_threshold = 200;
+int lil_finger_max = 400;
+int lil_finger_min = 100;
+int thumb_max = 400;
+int thumb_min = 100;
+
 
 // The sizeof this struct should not exceed 32 bytes
 // This gives us up to 32 8 bits channals
@@ -111,30 +114,18 @@ void loop()
   }
 
   // if little finger is bent, yaw clockwise
-  if (analogRead(A1) < yaw_up_threshold)
+  if (analogRead(A1) < lil_finger_max)
   {
-    if (data.yaw + yg < 255)
-    {
-      data.yaw += yg;
-      data.yaw = constrain(data.yaw, 0, 255);
-    }
-    else
-    {
-      data.yaw = 255;
-    }
+    data.yaw = analogRead(A1);
+    data.yaw = constrain(data.yaw, lil_finger_min, lil_finger_max);
+    data.yaw = map(data.yaw, 127, 255);
   }
-  else if (analogRead(A2) < yaw_down_threshold)
+  else if (analogRead(A2) < thumb_max)
   {
-    // if ring (or thumb?) finger is bent, yaw counter clockwise
-    if (data.yaw + yg > 0)
-    {
-      data.yaw -= yg;
-      data.yaw = constrain(data.yaw, 0, 255);
-    }
-    else
-    {
-      data.yaw = 0;
-    }
+    // if thumb is bent, yaw counter-clockwise
+    data.yaw = analogRead(A2);
+    data.yaw = constrain(data.yaw, thumb_min, thumb_max);
+    data.yaw = map(data.yaw, 127, 0); // Inverted
   }
 
   // Calculate pitch and roll values from MPU6050
