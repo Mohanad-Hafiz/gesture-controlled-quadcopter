@@ -29,11 +29,12 @@ int yg = 1; // Yaw gain
 // Set threshold values
 int throttle_up_threshold = 800;
 int throttle_down_threshold = 200;
+int start_looking_at_lil_finger = 500;
+int start_looking_at_thumb = 500; // to make sure that yaw is set to middle value when no finger is bent (not necessary for little finger)
 int lil_finger_max = 400;
 int lil_finger_min = 100;
 int thumb_max = 400;
 int thumb_min = 100;
-
 
 // The sizeof this struct should not exceed 32 bytes
 // This gives us up to 32 8 bits channals
@@ -59,7 +60,7 @@ void resetData()
   data.yaw = 127;
   data.pitch = 127;
   data.roll = 127;
-  data.AUX1 = 0;
+  data.AUX1 = 1;
   data.AUX2 = 0;
 }
 
@@ -114,18 +115,14 @@ void loop()
   }
 
   // if little finger is bent, yaw clockwise
-  if (analogRead(A1) < lil_finger_max)
+  if (analogRead(A1) < start_looking_at_lil_finger)
   {
-    data.yaw = analogRead(A1);
-    data.yaw = constrain(data.yaw, lil_finger_min, lil_finger_max);
-    data.yaw = map(data.yaw, 127, 255);
+    data.yaw = map(constrain(analogRead(A1), lil_finger_min, lil_finger_max), lil_finger_min, lil_finger_max, 255, 127);
   }
-  else if (analogRead(A2) < thumb_max)
+  else if (analogRead(A2) < start_looking_at_thumb)
   {
     // if thumb is bent, yaw counter-clockwise
-    data.yaw = analogRead(A2);
-    data.yaw = constrain(data.yaw, thumb_min, thumb_max);
-    data.yaw = map(data.yaw, 127, 0); // Inverted
+    data.yaw = map(constrain(analogRead(A2), thumb_min, thumb_max), thumb_min, thumb_max, 0, 127);
   }
 
   // Calculate pitch and roll values from MPU6050
